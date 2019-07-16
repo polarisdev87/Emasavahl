@@ -1,0 +1,419 @@
+<header class="scrollheader {% if template.name == 'index' %}home{% endif %}" data-section-id="{{ section.id }}">
+  <div class="topbar{% if section.settings.full_width_header %} gridlock-fluid{% endif %}">
+    <div class="row">
+
+      <div class="{% if section.settings.cart_position == 'announcement-bar' %} desktop-6 tablet-6{% else %} desktop-12 tablet-6{% endif %} mobile-3" id="banner-message">
+        {% if section.settings.show_announcement_text %}
+          <a href="{{ section.settings.announcement_link }}">{{ section.settings.announcement_text | escape }}</a>
+        {% endif %}
+      </div>
+
+      {% if section.settings.cart_position == 'announcement-bar' %}
+        <ul id="cart" class="desktop-6 tablet-3 mobile-hide right">
+          <li class="seeks">
+            <a id="inline" href="#search_popup" class="open_popup">
+              <i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+            {% if settings.show_multiple_currencies %}
+              {% include 'currencies-switcher' %}
+            {% endif %}
+          </li>
+
+          {% if shop.customer_accounts_enabled %}
+            <li class="cust">
+              {% if customer  %}
+                <a href="/account">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                </a>
+                <a href="/account/logout" class="logout-link">
+                  <i class="fa fa-user-times" aria-hidden="true"></i>
+                </a>
+              {% else %}
+                <a href="/account/login">
+                  <i class="fa fa-user-o" aria-hidden="true"></i>
+                </a>
+              {% endif %}
+            </li>
+          {% endif %}
+
+          <li>
+            <a href="/cart" {% if settings.ajax_cart_method == 'drawer' %}class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false"{% endif %}>
+              <span class="cart-words"></span>
+        		&nbsp;{% if section.settings.cart_icon == 'cart' %}<i class="fa fa-shopping-cart" aria-hidden="true"></i>{% elsif section.settings.cart_icon == 'bag' %}<i class="fa fa-shopping-bag" aria-hidden="true"></i>{% endif %}
+              <span class="CartCount">{{ cart.item_count }}</span>
+              &nbsp;<span class="CartCost"><span class="money">{{ cart.total_price | money }}</span></span>
+            </a>
+          </li>
+
+        </ul>
+      {% endif %}
+      {% include 'mobile-cart' %}
+    </div>
+  </div>
+  <div id="navigation"{% if section.settings.full_width_header %} class="gridlock-fluid"{% endif %}>
+    <div class="row">
+      <div class="nav-container desktop-12 tablet-6 mobile-3">
+        {% if section.settings.logo_align == 'left' %}
+          <div id="logo" class="desktop-2 tablet-2 mobile-3">
+            {% if section.settings.logo != blank %}
+              {%- assign image_size = '400x' -%}
+              <a href="/">
+                <img src="{{ section.settings.logo | img_url: image_size }}" itemprop="logo">
+              </a>
+            {% else %}
+              <a href="/">{{ shop.name }}</a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+
+        <nav class="{% if section.settings.logo_align == 'center' %} nav-left desktop-5{% if section.settings.nav_style == 'mobile' %} tablet-1{% endif %} {% elsif section.settings.logo_align == 'left' and section.settings.cart_position == 'announcement-bar' %} desktop-10 tablet-4{% elsif section.settings.logo_align == 'left' and section.settings.cart_position == 'header' %} desktop-7{% endif %}">
+          {% if section.settings.nav_style == 'full'%}
+            <ul id="main-nav">
+              {% for link in linklists[section.settings.main_nav].links %}
+                {% include 'navigation' %}
+              {% endfor %}
+            </ul>
+          {% elsif section.settings.nav_style == 'mobile' %}
+            <span class="shifter-handle">
+              <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+            </span>
+          {% endif %}
+        </nav>
+
+        {% if section.settings.logo_align == 'center' %}
+          <div id="logo" class="desktop-2 tablet-6 mobile-3">
+            {% if section.settings.logo != blank %}
+              {%- assign image_size = '400x' -%}
+              <a href="/">
+                <img src="{{ section.settings.logo | img_url: image_size }}" itemprop="logo">
+              </a>
+            {% else %}
+              <a href="/">
+                {{ shop.name }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+
+        {% if section.settings.cart_position == 'header' %}
+          <ul id="cart" class="desktop-5 tablet-3 mobile-hide right">
+
+            <li class="seeks">
+              <a id="inline" href="#search_popup" class="open_popup">
+                <i class="fa fa-search" aria-hidden="true"></i>
+              </a>
+              {% if settings.show_multiple_currencies %}
+              {% include 'currencies-switcher' %}
+              {% endif %}
+            </li>
+
+            {% if shop.customer_accounts_enabled %}
+              <li class="cust">
+                {% if customer  %}
+                  <a href="/account">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                  </a>
+                  <a href="/account/logout" class="logout-link">
+                    <i class="fa fa-user-times" aria-hidden="true"></i>
+                  </a>
+                {% else %}
+                  <a href="/account/login">
+                    <i class="fa fa-user-o" aria-hidden="true"></i>
+                  </a>
+                {% endif %}
+              </li>
+            {% endif %}
+            <li>
+              <a href="/cart" {% if settings.ajax_cart_method == 'drawer' %}class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false"{% endif %}>
+                <span class="cart-words"></span>
+        			&nbsp;{% if section.settings.cart_icon == 'cart' %}<i class="fa fa-shopping-cart" aria-hidden="true"></i>{% elsif section.settings.cart_icon == 'bag' %}<i class="fa fa-shopping-bag" aria-hidden="true"></i>{% endif %}
+                <span class="CartCount">{{ cart.item_count }}</span>
+                &nbsp;<span class="CartCost"><span class="money">{{ cart.total_price | money }}</span></span>
+              </a>
+            </li>
+          </ul>
+        {% elsif section.settings.cart_position == 'announcement-bar' and section.settings.logo_align == 'center' %}
+          <div class="desktop-5 tablet-3" id="logo-spacer">
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</header>
+<div id="phantom"{% if section.settings.header_cover and template == 'index' %} class="ignore-this"{% endif %}></div>
+{% if template contains 'collection' %}
+  {% if collection.description contains '[banner]' %}
+    {% capture banner %}{{ collection.handle }}.jpg{% endcapture %}
+    <div class="collection-banner">
+      {% include 'collection-banner-image' %}
+    </div>
+  {% endif %}
+{% endif %}
+
+<style>
+  {% if section.settings.logo != blank %}
+    @media screen and ( min-width: 740px ) {
+      #logo img { max-width: {{ section.settings.logo_max_width }}px; }
+    }
+  {% endif %}
+  {% if section.settings.header_cover and template == 'index' %}
+    @media screen and ( min-width: 981px ) {
+      .scrollheader { position: fixed; }
+    }
+  {% endif %}
+  {% if section.settings.header_border %}
+    header { border-bottom: 1px solid {{ settings.dotted_color }}; }
+  {% endif %}
+  {% if section.settings.logo_align == 'center' %}
+    #logo { text-align: center !important; }
+    #logo a { float: none; }
+  {% endif %}
+  {% unless section.settings.logo_align == 'center' %}
+    #logo { margin-right: 20px; }
+  {% endunless  %}
+
+  {% unless section.settings.cart_position == 'announcement-bar' %}
+    .topbar { text-align: center !important; }
+  {% endunless %}
+  {% if section.settings.logo_align == 'left' and section.settings.nav_style == 'mobile' %}
+    .shifter-handle { margin-left: 20px; }
+  {% endif %}
+
+  .topbar {
+    font-size: {{ section.settings.announcement_text_size }}px;
+  }
+  .topbar,
+  .topbar a {
+    color: {{ settings.announcement_bar_text_color }};
+  }
+  .topbar ul#cart li a {
+    font-size: {{ section.settings.announcement_text_size }}px;
+  }
+  .topbar select.currency-picker {
+    font-size: {{ section.settings.announcement_text_size }}px;
+  }
+  #logo a {
+    font-size: {% if settings.use_logo_image %}inherit{% else %}{{ section.settings.logo_size }}px{% endif %};
+    text-transform: {{ section.settings.logo_transform }};
+    font-weight: {{ section.settings.logo_weight }};
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Header",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "full_width_header",
+        "label": "Full width header"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_cover",
+        "label": "Float header over slideshow"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_border",
+        "label": "Add bottom border"
+      },
+      {
+        "type": "header",
+        "content": "Announcement Bar"
+      },
+      {
+        "type": "checkbox",
+        "default": true,
+        "id": "show_announcement_text",
+        "label": "Show announcement text"
+      },
+      {
+        "type": "text",
+        "id": "announcement_text",
+        "label": "Announcement text",
+        "default": "Share a shop announcement or message"
+      },
+      {
+        "type": "range",
+        "id": "announcement_text_size",
+        "min": 12,
+        "max": 24,
+        "step": 1,
+        "unit": "px",
+        "label": "Announcement text size",
+        "default": 13
+      },
+      {
+        "type": "url",
+        "id": "announcement_link",
+        "label": "Announcement link"
+      },
+      {
+        "type": "header",
+        "content": "Cart Link"
+      },
+      {
+        "type": "select",
+        "id": "cart_position",
+        "label": "Cart link position",
+        "options": [
+          {
+            "value": "announcement-bar",
+            "label": "Announcement Bar"
+          },
+          {
+            "value": "header",
+            "label": "Header"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "cart_icon",
+        "label": "Cart link icon",
+        "options": [
+          {
+            "value": "cart",
+            "label": "Cart"
+          },
+            {
+            "value": "bag",
+            "label": "Bag"
+          }
+        ],
+        "info":"You can change the text in your edit language section"
+      },
+      {
+        "type": "header",
+        "content": "Header Logo"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_max_width",
+        "min": 100,
+        "max": 250,
+        "step": 5,
+        "unit": "px",
+        "label": "Custom logo width",
+        "default": 200
+      },
+        {
+        "type": "select",
+        "id": "logo_align",
+        "label": "Logo position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ]
+      },
+      {
+        "type": "range",
+        "id": "logo_size",
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px",
+        "label": "Logo text size",
+        "default": 22
+      },
+        {
+        "type": "select",
+        "id": "logo_transform",
+        "label": "Logo text case",
+        "options": [
+          {
+            "value": "uppercase",
+            "label": "Uppercase"
+          },
+          {
+            "value": "none",
+            "label": "Normal"
+          }
+        ]
+      },
+      {
+        "type": "select",
+        "id": "logo_weight",
+        "label": "Logo text weight",
+        "options": [
+          {
+            "value": "400",
+            "label": "Normal"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "header",
+        "content": "Navigation"
+      },
+      {
+        "type": "select",
+        "id": "nav_style",
+        "label": "Navigation style",
+        "options": [
+          {
+            "value": "full",
+            "label": "Full Horizontal"
+          },
+          {
+            "value": "mobile",
+            "label": "Slideout Vertical"
+          }
+        ],
+        "info":"Mega menu will only show if using the Full Horizontal style"
+      },
+      {
+        "type": "link_list",
+        "id": "main_nav",
+        "label": "Choose navigation menu",
+        "default":"main-menu"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "mega_menu",
+        "name": "Mega menu",
+        "settings": [
+          {
+            "type":"text",
+            "id":"menu_item",
+            "label":"Menu item",
+            "info":"Enter menu item to apply a mega menu"
+          },
+          {
+            "type": "image_picker",
+            "id": "nav_image",
+            "label": "Featured image"
+          },
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Slide link"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

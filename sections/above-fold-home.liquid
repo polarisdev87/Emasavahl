@@ -1,0 +1,52 @@
+<div class="row above-fold">
+	<div class="desktop-5 desktop-push-1 tablet-6 mobile-full home-vision">
+      <div class="wrapper">
+		<h2><small>ema Savahl vision</small>HANDCRAFTED CREATION</h2>
+		<p>Each exclusive handcrafted creation is made in the United States by a tribe of women. Our wearable art warms to provide an optical illusion and an amazing fit that molds to your body. Art is worth the investment, are you?</p>
+      </div>
+    </div>  
+    <div class="desktop-7 desktop-push-5 tablet-6 mobile-full">
+      {% for block in section.blocks %}
+      <img src="{{ 'img-home-ema-01.jpg' | asset_img_url: '670x' | split:"?" | first }}" alt="Ema Savalh Handcrafted Creation">
+      {% endfor %}
+    </div>  
+</div>
+{% schema %}
+{
+  "name": "Above the fold",
+  "max_blocks": 1,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Add Block",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       	  "label": "Image Banner"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Above the fold",
+      "category": "text"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

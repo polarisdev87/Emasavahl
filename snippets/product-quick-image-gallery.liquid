@@ -1,0 +1,56 @@
+{% assign current_variant = product.selected_or_first_available_variant %}
+
+{% assign product_image_box_ratio_max = 0 %}
+
+{% for image in product.images %}
+  {% assign image_box_ratio = image.height | append: ".0" | times: 1 | divided_by: image.width | times: 100 %}
+
+  {% if image_box_ratio > product_image_box_ratio_max %}
+    {% assign product_image_box_ratio_max = image_box_ratio %}
+  {% endif %}
+{% endfor %}
+
+{% assign product_image_box_ratio_max = product_image_box_ratio_max | append: "%" %}
+
+{% assign featured_image = current_variant.image | default: product.featured_image %}
+
+<div class="product-main-images desktop-12">
+  <div class="product-image-container" style="padding-bottom: {{ product_image_box_ratio_max }};" >
+    {% for image in product.images %}
+      {% assign image_box_ratio = image.height | append: ".0" | times: 1 | divided_by: image.width | times: 100 | append: "%" %}
+      {% assign img_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+
+      <div class="product-main-image {% if image.id == featured_image.id %}selected{% endif %}" data-image-id="{{ image.id }}">
+        <img id="{{ product.id }}" class="product__image lazyload lazyload-fade"
+          src="{{ image | product_img_url: '300x' }}"
+          data-src="{{ img_url }}"
+          data-sizes="auto"
+          data-zoom-src="{{ img_url }}"
+          alt="{{ image.alt | escape }}">
+
+        <noscript>
+          <img id="{{ product.id }}" class="product-main-image" src="{{ image | product_img_url: '800x' }}" alt='{{ image.alt | escape }}'/>
+        </noscript>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% if product.images.size > 1 %}
+  <div class="qvimages">
+    {% for image in product.images %}
+      {% assign img_url = image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+
+      <div class="product-thumbnail desktop-2 {% if forloop.first %}selected{% endif %}" data-image-id="{{ image.id }}">
+        <img class="lazyload lazyload-fade"
+          src="{{ image | product_img_url: '100x' }}"
+          data-src="{{ img_url }}"
+          data-sizes="auto"
+          alt="{{ image.alt | escape }}">
+
+        <noscript>
+          <img class="product-thumbnail desktop-2" src="{{ image | product_img_url: '100x' }}" alt="{{ image.alt | escape }}" />
+        </noscript>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}

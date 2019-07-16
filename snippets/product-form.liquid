@@ -1,0 +1,126 @@
+
+  {% form 'product', product, data-product-form:product_form_config %}
+
+  <script class="product-json" type="application/json">
+    {{ product | json }}
+  </script>
+
+  <!-- collection breadcrumbs -->
+  {% if collection %}
+    <div class="desktop-1 right mobile-hide">
+      {% if collection.previous_product %}
+        {{ '<i class="fa fa-angle-left" aria-hidden="true"></i>' | link_to: collection.previous_product }}
+      {% endif %}
+        &nbsp;
+        {% if collection.next_product %}
+        {{ '<i class="fa fa-angle-right" aria-hidden="true"></i>' | link_to: collection.next_product }}
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="product-description">
+
+    {% if section.settings.show_vendor %}
+      <h3>{{ 'products.product.designer' | t }}: {{ product.vendor }}</h3>
+      <div class="clear"></div>
+    {% endif %}
+
+    {%- if settings.show_multiple_currencies -%}
+      {% assign price = current_variant.price | money_with_currency %}
+      {% assign compare_price = current_variant.compare_at_price | money_with_currency %}
+    {%- else -%}
+      {% assign price = current_variant.price | money %}
+      {% assign compare_price = current_variant.compare_at_price | money %}
+    {%- endif -%}
+    {%- if current_variant.compare_at_price > current_variant.price -%}
+      {% assign onsale = true %}
+    {%- endif -%}
+    <div id="product-price">
+      <span class="product-price" itemprop="price">
+        <span class="{% if onsale %}onsale{% endif %} money">{{ price | remove: '.00' }}</span>
+      </span>
+      {% if onsale %}
+        <span class="was">
+          <span class="money">{{ compare_price }}</span>
+        </span>
+      {% else %}
+        <span class="was"></span>
+      {% endif %}
+    </div><div class="clear"></div>
+
+    {% if section.settings.product_note != blank %}
+      <p class="product-note">
+        {{ section.settings.product_note | escape }}
+      </p><div class="clear"></div>
+    {% endif %}
+
+    {% if product.options.size > 1 %}
+     <div class="select" {% if product.variants.size == 1 %}style="display: none;"{% endif %}>
+       <select id="product-select-{{ product.id }}" name='id'>
+         {% for variant in product.variants %}
+           <option value="{{ variant.id }}" {% if variant == current_variant %}selected="selected"{% endif %}>
+             {{ variant.title }} - {{ variant.price | money | remove: '.00' }}
+           </option>
+         {% endfor %}
+       </select>
+     </div>
+    {% elsif product.options.size == 1 and product.variants.size > 1 %}
+     <div class="select">
+       <label>{{ product.options[0] }}</label>
+       <select id="product-select-{{ product.id }}" name='id'>
+         {% for variant in product.variants %}
+           <option data-sku="{{ variant.sku }}" value="{{ variant.id }}" {% if variant == current_variant %}selected="selected"{% endif %}>
+             {{ variant.title }} - {{ variant.price | money | remove: '.00' }}
+           </option>
+         {% endfor %}
+       </select>
+     </div>
+    {% elsif product.variants.size == 1 %}
+     <select id="product-select-{{ product.id }}" name="id" {% if product.variants.size == 1 %}style="display: none;"{% endif %}>
+       {% for variant in product.variants %}
+         <option value="{{ variant.id }}" {% if variant == current_variant %}selected="selected"{% endif %}>
+           {{ variant.title }} - {{ variant.price | money | remove: '.00' }}
+         </option>
+       {% endfor %}
+     </select>
+    {% else %}
+     <div class="what-is-it">
+       {% if product.options.first != 'Title' %}
+         <label>{{ product.options.first }}:</label>
+         {% for variant in product.variants %}
+           <span class="it-is">{{ variant.option1 | escape }}</span>
+         {% endfor %}
+       {% endif %}
+     </div>
+     <div class="product-variants"></div><!-- product variants -->
+     <input  type="hidden" id="{{ variant.id }}" name="id" data-sku="{{ variant.sku }}" value="{{ product.variants[0].id }}" />
+    {% endif %}
+
+    
+    {%- if section.settings.show_quantity_selector -%}
+      <div class="product-qty selector-wrapper">
+        <label for="quantity">{{ 'products.product.quantity' | t }}</label>
+        <input min="1" type="number" class="quantity" name="quantity" value="1" />
+      </div>
+    {%- endif -%}
+
+    {% if current_variant.available %}
+      <div class="product-add">
+        <input id="AddToCart" type="submit" name="button" class="add{% if section.settings.show_payment_button %} secondary-button{% endif %}" value="{{ 'products.product.add_to_cart' | t }}" />
+      {% if section.settings.show_payment_button %}
+      {{ form | payment_button }}
+        <p><strong>Free Shipping on ALL non-rushed orders</strong></p>
+      {% endif %}        
+      </div>
+    {% else %}
+      <div class="product-add">
+        <input id="AddToCart" type="submit" name="button" class="add{% if section.settings.show_payment_button %} secondary-button{% endif %}" value="{{ 'products.product.sold_out' | t }}" />
+      </div>
+    {% endif %}
+    {% if section.settings.show_sku %}
+      <div class="sku">
+        <label style="display: inline-block; line-height: 1.6em;">{{ 'customer.order.details.sku' | t }}:</label> <span class="variant_sku">{{ current_variant.sku }}</span>
+      </div><div class="clear"></div>
+    {% endif %}
+  </div>
+{% endform %}

@@ -1,0 +1,146 @@
+<div data-section-id="{{ section.id }}">
+
+    {% if section.settings.image != blank %}
+      <div class="collection-banner">
+        {%- include 'basic-responsive-image', type: section.settings.image -%}
+        <noscript>
+          <img src="{{ section.settings.image | img_url: '1024x' }}" alt="{{ section.settings.image.alt }}">
+        </noscript>
+      </div>
+    {% endif %}
+
+  <div id="content" class="row">
+
+    {% if settings.breadcrumb %}
+      {% include 'breadcrumb' %}
+    {% endif %}
+
+    <div class="section-title desktop-12 mobile-3">
+      <h1>
+        {% if current_tags %}
+          {{ blog.title | link_to: blog.url }} &raquo; {{ current_tags.first }}
+        {% else %}
+          {{ blog.title }}
+        {% endif %}
+        <a class="fr" target="_blank" href="{{ shop.url }}/blogs/{{ blog.handle }}.atom">
+          <i class="fa fa-rss" aria-hidden="true"></i>
+        </a>
+      </h1>
+    </div>
+
+    {% if section.settings.text != blank %}
+      <div id="collection-description" class="desktop-12 tablet-6 mobile-3">
+        <div class="rte">
+          {{ section.settings.text }}
+        </div>
+      </div>
+    {% endif %}
+
+    {% paginate blog.articles by 50 %}
+
+    {% if section.settings.blog_sidebar %}
+      <div id="blog-sidebar" class="desktop-2 tablet-2 mobile-3">
+
+      {% if section.settings.recent_posts %}
+        <h4>{{ section.settings.recent_title }}</h4>
+        <ul id="blog-recent">
+          {% for article in blog.articles %}
+            <li>{{ article.title | link_to: article.url }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if section.settings.post_tags %}
+        <h4>{{ section.settings.tags_title }}</h4>
+        <ul id="blog-tags">
+          {% for tag in blog.tags %}
+            <li><a href="{{ blog.url }}/tagged/{{ tag | handle }}">{{ tag }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {% if section.settings.show_facebook_like %}
+        <div id="facebook-card">
+          <h4>{{ section.settings.facebook_title }}</h4>
+          <div class="fb-like-box" data-href="{{ settings.facebook_url }}" data-colorscheme="light" data-show-faces="false" data-header="false" data-stream="false" data-show-border="false"></div>
+        </div>
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+    <ul id="blog-articles" class="{% if section.settings.blog_sidebar %}desktop-8 {% else %}desktop-12 {% endif %}tablet-4 mobile-3">
+      {% for article in blog.articles  %}
+        {% include 'article-loop' %}
+      {% endfor %}
+    </ul>
+
+    <div class="clear"></div>
+
+    {% include 'pagination' %}
+
+
+    {% endpaginate %}
+
+  </div>
+</div>
+{% schema %}
+  {
+    "name": "Blog",
+    "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+    {
+        "id": "text",
+        "type": "richtext",
+        "label": "Text",
+        "default": "<p>Add some descriptive text to your all collections page.</p>"
+     },
+      {
+        "type": "checkbox",
+        "id": "blog_sidebar",
+        "label": "Show sidebar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "recent_posts",
+        "label": "Show recent posts",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "recent_title",
+        "label": "Recent posts title",
+        "default": "Explore"
+      },
+      {
+        "type": "checkbox",
+        "id": "post_tags",
+        "label": "Show tags",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "tags_title",
+        "label": "Blog tags title",
+        "default": "Categories"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_facebook_like",
+        "label": "Show Facebook like box",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "facebook_title",
+        "label": "Facebook title",
+        "default": "Connect"
+      }
+    ]
+  }
+{% endschema %}

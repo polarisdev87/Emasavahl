@@ -1,0 +1,58 @@
+</div>
+</div>
+<div data-section-id="{{ section.id }}" class="form-wrapper">
+      <div id="content" class="row">
+  {% if section.settings.form_position != 'center' %}
+    <div id="page" class="desktop-6 tablet-6 mobile-3{% if section.settings.form_position == 'left' %} form-left{% endif %}">
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+    <div class="row">
+  <div class="desktop-6 tablet-6 mobile-full">
+  </div>
+  <div class="desktop-6 tablet-6 mobile-full">
+  </div>
+  </div>
+    <div class="desktop-6 mobile-3 tablet-6">
+      {% include 'contact-couture' %}
+    </div>
+
+  {% else %}
+
+    {% comment %}If we have the contact form centered only {% endcomment %}
+    <div id="page" class="desktop-8 desktop-push-2 tablet-6 mobile-3 centered-form">
+      <div class="rte">
+        {{ page.content }}
+      </div>
+      {% include 'contact-couture' %}
+    </div>
+  {% endif %}
+</div>
+
+{% schema %}
+{
+    "name": "Contact Couture page",
+    "settings": [
+		{
+        "type": "select",
+        "id": "form_position",
+        "label": "Contact form position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

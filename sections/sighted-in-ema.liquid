@@ -1,0 +1,61 @@
+<div class="section-title row">
+    <h2> {{ section.settings.text-box }} </h2>
+</div>
+<div class="section-home-sies row">
+  {% for block in section.blocks %}
+          {% include 'sies-grid-item' %}
+  {% endfor %}
+</div>
+<div class="row">
+  <div class="sighted-in-ema-btn text-center">
+      <a href="{{ section.settings.link }}"> Click To See All Sighted in Ema</a>
+  </div>
+</div> 
+{% schema %}
+{
+  "name": "Sighted in Ema",
+  "max_blocks": 20,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Sighted in Ema Savahl"
+    },
+    {
+      "id": "link",
+      "type": "url",
+      "label": "CTA"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Add New Sighted",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       		"label": "Image Banner"
+        },
+          {
+            "type": "product",
+            "id": "product",
+            "label": "Product"
+          },
+          {
+            "type": "text",
+            "id": "social_handle",
+            "label": "Social Profile"
+          }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sighted in Ema Savahl",
+      "category": "Blog"
+    }
+  ]
+}
+{% endschema %}

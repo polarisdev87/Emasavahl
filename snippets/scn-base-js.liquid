@@ -1,0 +1,58 @@
+<script>
+    
+    var scnHiddenVariants = ["(BK ","Free Gift","100% Off"];
+    function scnProduct(product) {
+        var newVariants = [], i, isValid, variantIndex, priceMin = product.price_max;
+        for (variantIndex in product.variants) {
+            var variant = product.variants[variantIndex];
+            if (typeof variant != 'object') {
+                continue;
+            }
+            isValid = true;
+            for (i in scnHiddenVariants) {
+                
+                if (typeof variant == 'object' && variant.title.indexOf(scnHiddenVariants[i]) != -1) {
+                    isValid = false;
+                }
+            }
+            if (isValid) {
+                newVariants.push(variant);
+                if (priceMin < variant.price) {
+                    priceMin = variant.price;
+                }
+            }
+        }
+
+        product.variants = newVariants;
+        product.price = priceMin;
+        product.price_min = priceMin;
+        product.price_varies = product.price_min != product.price_max;
+        return product;
+    }
+
+    
+    if (typeof jQuery != "undefined") {
+        setTimeout(function () {
+            function _htmlEncode(html) {
+                return document.createElement('a').appendChild(
+                        document.createTextNode(html)).parentNode.innerHTML;
+            }
+            
+            jQuery('a.sca-qv-button').each(function () {
+                var quickViewImage = jQuery(this).closest('i');
+                var product = quickViewImage.find('span');
+                var productJson, productText;
+                if (product.length) {
+                    try {
+                        productJson = JSON.parse(product.html());
+                    } catch (ex) {
+                        return;
+                    }
+                    
+                    productText = JSON.stringify(scnProduct(productJson));
+                    product.html(_htmlEncode(productText));
+                }
+            });
+        }, 500);
+    }
+</script>

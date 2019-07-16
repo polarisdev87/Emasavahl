@@ -1,0 +1,129 @@
+<div data-section-id="{{ section.id }}" data-section-type="collection-section">
+{% assign number = section.settings.products_per_page %}
+{% paginate collection.products by number %}
+
+  <div class="section-title desktop-12 mobile-3">
+    <h1>
+      {% if collection.handle == 'all' %}
+        {{ 'collections.general.all_products' | t }}
+      {% else %}
+        {{ collection.title }}
+      {% endif %}
+    </h1>
+  </div>
+  <div class="clear"></div>
+  <a class="show mobile-3" href="#">
+    <i class="fa fa-bars fa-2x" aria-hidden="true"></i>
+  </a>
+  <div class="clear"></div>
+
+  <div id="main-content">
+    {% if section.settings.show_collection_sidebar %}
+      <div class="desktop-2 tablet-6 mobile-3" id="aside">
+        {% include 'collection-sidebar' %}
+      </div>
+    {% endif %}
+
+    <div class="{% if section.settings.show_collection_sidebar %}desktop-10{% else %}desktop-12{% endif %} tablet-6 mobile-3" id="bside">
+
+      {% if collection.description != blank %}
+        <div id="collection-description">
+          <div class="rte">
+            {{ collection.description | remove: "[banner]" }}
+          </div>
+        </div>
+      {% endif %}
+
+      <div class="clear"></div>
+
+      <div id="product-loop">
+        {% for product in collection.products %}
+          <div class="product {% if section.settings.products_per_row  == 2 %}desktop-6{% cycle ' first', ' last' %}{% elsif section.settings.products_per_row  == 3 %}desktop-4{% cycle ' first', '', ' last' %}{% elsif section.settings.products_per_row == 4 %}desktop-3{% cycle ' first', '', '', ' last' %}{% endif %} tablet-half mobile-half" id="prod-{{ product.id }}" data-alpha="{{ product.title }}" data-price="{{ product.price }}">
+            {% include 'product-listing' %}
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="clear"></div>
+
+    {% include 'pagination' %}
+  </div>
+{% endpaginate %}
+</div>
+{% schema %}
+{
+    "name": "Collection Page",
+  	"max_blocks":5,
+    "settings": [
+      {
+        "type": "range",
+        "id": "products_per_row",
+        "min": 2,
+        "max": 4,
+        "step": 1,
+        "label": "Products per row",
+        "default":4
+      },
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "min": 12,
+        "max": 48,
+        "step": 1,
+        "label": "Products per page",
+        "default":30
+      },
+      {
+        "type": "checkbox",
+        "id": "show_collection_sidebar",
+        "label": "Enable sidebar",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "sticky_sidebar",
+        "label": "Make sidebar sticky"
+      },
+      {
+        "type": "checkbox",
+        "id": "sort_by",
+        "label": "Show sort by",
+        "default": true
+      }
+    ],
+   "blocks":[
+      {
+         "type":"menu",
+         "name":"Menu",
+         "settings":[
+            {
+               "type": "link_list",
+               "id": "side_nav",
+               "label": "Sidebar menu",
+               "info":"This menu has limited support for dropdown items"
+            },
+           {
+            "type": "text",
+            "id": "title",
+            "label": "Menu title",
+            "default": "Explore"
+           }
+         ]
+      },
+      {
+         "type":"vendor_list",
+         "name":"Vendor list",
+		     "limit": 1,
+         "settings":[
+          {
+          "type": "text",
+          "id": "shop_by_designer_title",
+          "label": "Vendor list title",
+          "default": "Shop by Designer"
+          }
+         ]
+      }
+   ]
+  }
+{% endschema %}

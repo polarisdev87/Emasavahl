@@ -1,0 +1,117 @@
+{% assign meganav = false %}
+{% for block in section.blocks %}
+  {% if block.settings.menu_item == link.title %}
+    {% capture megalink %}
+    <li class="dropdown has_sub_menu" aria-haspopup="true" aria-expanded="false">{{ link.title | link_to: link.url }}
+      <ul class="megamenu">
+        <div class="mega-container">
+          {% if block.settings.nav_image != blank  %}
+          <span class="desktop-3 tablet-hide mm-image">
+            {%- assign image_size = '300x' -%}
+            <a href="{{ block.settings.link }}">
+              <img src="{{ block.settings.nav_image | img_url: image_size }}">
+            </a>
+          </span>
+          {% endif %}
+          <span class="{% if block.settings.nav_image != blank %}desktop-9{% else %}desktop-12{% endif %} tablet-6">
+            {% for sub_link in link.links %}
+            <li class="desktop-3 tablet-fourth">
+              <h4><a href="{{ sub_link.url }}">{{ sub_link.title }}</a></h4>
+              {% if sub_link.links != blank %}
+              <ul class="mega-stack">
+                {% for sub_sub_link in sub_link.links %}
+                <li><a href="{{ sub_sub_link.url }}">{{ sub_sub_link.title }}</a></li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </li>
+            {% endfor %}
+          </span>
+        </div>
+      </ul>
+    </li>
+    {% endcapture %}
+  {% assign meganav = true %}
+  {% endif %}
+{% endfor %}
+{% if meganav %}
+  {{ megalink }}
+{% elsif link.links != blank %}
+  <li class="dropdown has_sub_menu" aria-haspopup="true" aria-expanded="false">
+    <a href="{{ link.url }}" class="dlinks">
+      {{ link.title }}
+    </a>
+    {% if link.url contains 'collections/' %}
+      {% assign collection = link.object %}
+      <ul class="megamenu">
+        <div class="mega-container">
+          <!-- Start Megamenu Inner Links -->
+          <li class="desktop-2 tablet-1">
+            <h4>{{ link.title }}</h4>
+            <ul class="mega-stack">
+              {% for sub_link in link.links %}
+                {% if sub_link.links != blank %}
+                  <li class="nest has_sub_menu" aria-haspopup="true" aria-expanded="false">
+                    <a href="{{ sub_link.url }}">
+                      {{ sub_link.title }}
+                    </a>
+                    <ul class="nested">
+                      {% for sub_sub_link in sub_link.links %}
+                        <li>
+                          <a href="{{ sub_sub_link.url }}">
+                            {{ sub_sub_link.title }}
+                          </a>
+                        </li>
+                      {% endfor %}
+                    </ul>
+                  </li>
+                {% else %}
+                  <li>
+                    <a href="{{ sub_link.url }}">
+                      {{ sub_link.title }}
+                    </a>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </li>
+
+          {% for product in collection.products limit: 5 %}
+            <li class="desktop-2 product-index">
+              {% include 'product-listing' %}
+            </li>
+          {% endfor %}
+        </div>
+      </ul>
+    {% else %}
+      <ul class="submenu">
+        {% for sub_link in link.links %}
+          {% if sub_link.links != blank %}
+            <li class="nest has_sub_menu" aria-haspopup="true" aria-expanded="false">
+              <a href="{{ sub_link.url }}">
+                {{ sub_link.title }}
+              </a>
+              <ul class="nested">
+                {% for sub_sub_link in sub_link.links %}
+                  <li>
+                    <a href="{{ sub_sub_link.url }}">
+                      {{ sub_sub_link.title }}
+                    </a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
+          {% else %}
+            <li>
+              <a href="{{ sub_link.url }}">
+                {{ sub_link.title }}
+              </a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </li>
+{% else %}
+  <li>{{ link.title | link_to: link.url }}</li>
+{% endif %}

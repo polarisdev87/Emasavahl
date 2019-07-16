@@ -1,0 +1,43 @@
+<div class="single-article desktop-6 {% if template == 'index' %}tablet-3{% else %}tablet-6{% endif %} mobile-3">
+
+  <h3>
+    <a href="{{ article.url }}">
+      {{ article.title }}
+    </a>
+  </h3>
+
+  <div class="article-content">
+    {% if article.image %}
+      <a href="{{ article.url }}">
+        {% include "basic-responsive-image", type: article.image %}
+        <noscript>
+          <img src="{{ article.image | img_url: '1024x' }}" alt="{{ article.image.alt }}">
+        </noscript>
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="article-body">
+    {% assign published_at = article.published_at | date: "%b %d, %Y" %}
+      <span class="posted">
+        {{ 'blogs.article.posted_on_date_html' | t: date: published_at }}
+      </span>
+
+    {% if article.comments_count > 0 %}
+      {% assign number_of_comments = article.comments_count %}
+      <span class="comment-count">
+        {{ 'blogs.comments.comments_with_count' | t: count: number_of_comments }}
+      </span>
+    {% endif %}
+
+    <div class="clear"></div>
+    <div class="rte">
+      {% if article.excerpt != blank %}
+        {{ article.excerpt }}
+      {% else %}
+        {{ article.content | strip_html | truncatewords: 30 }}
+      {% endif %}
+    </div>
+
+  </div>
+</div>

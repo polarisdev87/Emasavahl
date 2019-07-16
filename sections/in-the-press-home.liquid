@@ -1,0 +1,59 @@
+<section class="homepage-blog-{{ section.id }} index-section no-fouc" data-section-id="{{ section.id }}">
+<div class="section-title row">
+    <h2> {{ section.settings.text-box }} </h2>
+</div>
+<div class="row">
+  {% for block in section.blocks %}
+        <div class="single-article desktop-3 tablet-2 mobile-full text-center">
+          <a href="{{ block.settings.link }}" target="_blank"><img src="{{ block.settings.image | img_url: 'x90' }}"/></a>
+        <div class="btn-wrapper">   
+          <p><a href="{{ block.settings.link }}">{{ block.settings.shortdescription }}</a></p>
+        </div>
+        </div> 
+  {% endfor %}
+</div>  
+</section>
+{% schema %}
+{
+  "name": "In the press Home Section",
+	"max_blocks": 4,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "In the press Block",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       		"label": "Image Banner"
+        },
+        {
+          "id": "link",
+          "type": "url",
+       		"label": "Article Link"
+        },
+        {
+          "id": "shortdescription",
+          "type": "text",
+          "label": "Short Description",
+          "default": "Click here"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "In the press Home Section",
+      "category": "Blog"
+    }
+  ]
+}
+{% endschema %}

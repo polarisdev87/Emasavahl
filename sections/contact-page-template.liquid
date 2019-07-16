@@ -1,0 +1,56 @@
+<div data-section-id="{{ section.id }}">
+  <div class="section-title desktop-12 mobile-3">
+    <h1>{{ page.title }}</h1>
+  </div>
+
+  {% if section.settings.form_position != 'center' %}
+    <div id="page" class="desktop-6 tablet-6 mobile-3{% if section.settings.form_position == 'left' %} form-left{% endif %}">
+      <div class="rte">
+        {{ page.content }}
+      </div>
+    </div>
+
+    <div class="desktop-6 mobile-3 tablet-6">
+      {% include 'contact' %}
+    </div>
+
+  {% else %}
+
+    {% comment %}If we have the contact form centered only {% endcomment %}
+    <div id="page" class="desktop-8 desktop-push-2 tablet-6 mobile-3 centered-form">
+      <div class="rte">
+        {{ page.content }}
+      </div>
+      {% include 'contact' %}
+    </div>
+  {% endif %}
+
+
+</div>
+
+{% schema %}
+{
+    "name": "Contact page",
+    "settings": [
+		{
+        "type": "select",
+        "id": "form_position",
+        "label": "Contact form position",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

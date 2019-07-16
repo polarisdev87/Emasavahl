@@ -1,0 +1,155 @@
+{% layout none %}
+<div class="product-quick-view" style="position: relative; z-index: 0" id="product-{{ product.id }}" data-product-id="{{ product.id }}">
+  <div class="product-photos desktop-6 mobile-3" data-product-gallery>
+    {% include 'product-quick-image-gallery' %}
+  </div>
+  {% capture product_form_config %}{ "money_format": {{ shop.money_format | json }}, "enable_history": true, "currency_switcher_enabled": {{ settings.show_multiple_currencies | json }}, "sold_out": {{ "products.product.sold_out" | t | json }}, "button": {{ 'products.product.add_to_cart' | t | json }} }{% endcapture %}
+  {% form 'product', product, data-product-form:product_form_config %}
+    <script class="product-json" type="application/json">
+      {{ product | json }}
+    </script>
+    {% assign current_variant = product.selected_or_first_available_variant %}
+    <div id="product-right">
+      <div id="product-description">
+        <h2>{{ product.title }}</h2>
+        <!-- product vendor -->
+        {% if settings.vendor %}
+          <h3>{{ 'products.product.designer' | t }}: {{ product.vendor }}</h3>
+        {% endif %}
+
+        <!-- product price -->
+        {%- if settings.show_multiple_currencies -%}
+          {% assign price = current_variant.price | money_with_currency %}
+          {% assign compare_price = current_variant.compare_at_price | money_with_currency %}
+        {%- else -%}
+          {% assign price = current_variant.price | money %}
+          {% assign compare_price = current_variant.compare_at_price | money %}
+        {%- endif -%}
+        <div id="product-price">
+          <span class="product-price" itemprop="price">
+            <span class="money">{{ price }}</span>
+          </span>
+          {% if current_variant.compare_at_price > current_variant.price %}
+            <span class="was">
+              <span class="money">{{ compare_price }}</span>
+            </span>
+          {% endif %}
+        </div><div class="clear"></div>
+
+      {% if product.options.size > 1 %}
+       <div class="select" {% if product.variants.size == 1 %}style="display: none;"{% endif %}>
+         <select id="product-select-{{ product.id }}" name='id'>
+           {% for variant in product.variants %}
+             <option value="{{ variant.id }}" {% if variant == current_variant %}selected="selected"{% endif %}>
+               {{ variant.title }} - {{ variant.price | money }}
+             </option>
+           {% endfor %}
+         </select>
+       </div>
+      {% elsif product.options.size == 1 and product.variants.size > 1 %}
+       <div class="select">
+         <label>{{ product.options[0] }}</label>
+         <select id="product-select-{{ product.id }}" name='id'>
+           {% for variant in product.variants %}
+             <option data-sku="{{ variant.sku }}" value="{{ variant.id }}" {% if variant == current_variant %}selected="selected"{% endif %}>
+               {{ variant.title }} - {{ variant.price | money }}
+             </option>
+           {% endfor %}
+         </select>
+       </div>
+      {% elsif product.variants.size == 1 %}
+       <select id="product-select-{{ product.id }}" name="id" {% if product.variants.size == 1 %}style="display: none;"{% endif %}>
+         {% for variant in product.variants %}
+           <option value="{{ variant.id }}" {% if variant == current_variant %}selected="selected"{% endif %}>
+             {{ variant.title }} - {{ variant.price | money }}
+           </option>
+         {% endfor %}
+       </select>
+      {% else %}
+         <div class="what-is-it">
+           {% if product.options.first != 'Title' %}
+             <label>{{ product.options.first }}:</label>
+             {% for variant in product.variants %}
+               <span class="it-is">{{ variant.option1 | escape }}</span>
+             {% endfor %}
+           {% endif %}
+         </div>
+         <div class="product-variants"></div><!-- product variants -->
+         <input  type="hidden" id="{{ variant.id }}" name="id" data-sku="{{ variant.sku }}" value="{{ product.variants[0].id }}" />
+      {% endif %}
+
+        {%- if section.settings.show_quantity_selector -%}
+          <div class="product-qty selector-wrapper">
+            <label for="quantity">{{ 'products.product.quantity' | t }}</label>
+            <input min="1" type="number" class="quantity" name="quantity" value="1" />
+          </div>
+        {%- endif -%}
+        {% if current_variant.available %}
+          <div class="product-add">
+            <input id="AddToCart" type="submit" name="button" class="add{% if settings.show_payment_button %} secondary-button{% endif %}" value="{{ 'products.product.add_to_cart' | t }}" />
+          </div>
+        {% else %}
+          <div class="product-add">
+            <input id="AddToCart" type="submit" name="button" class="add{% if settings.show_payment_button %} secondary-button{% endif %}" value="{{ 'products.product.sold_out' | t }}" />
+          </div>
+        {% endif %}
+        {% if settings.show_payment_button %}
+        {{ form | payment_button }}
+        {% endif %}
+        <div class="clear"></div>
+        <!-- product description -->
+        <div class="rte">
+          {{ product.description | strip_html | truncatewords: 40 }}
+          <p class="view-full"><a href="{{ product.url | within: collection }}">{{ 'products.general.view_full' | t }}</a></p>
+        </div><div class="clear"></div>
+        <!-- product social share buttons -->
+        <div class="desc">
+          {% include 'social' with product %}
+        </div>
+      </div>
+    </div>
+  {% endform %}
+</div>
+
+{% if settings.ajax_cart_method == 'drawer' %}
+  {{ 'handlebars.min.js' | asset_url | script_tag }}
+  {% include 'ajax-cart-template' %}
+  {{ 'ajax-cart.js' | asset_url | script_tag }}
+  <script>
+    jQuery(function($) {
+      ajaxCart.init({
+        formSelector: '[data-product-form]',
+        cartContainer: '#CartContainer',
+        addToCartSelector: '#AddToCart',
+        cartCountSelector: '.CartCount',
+        cartCostSelector: '.CartCost',
+        moneyFormat: {{ shop.money_format | json }}
+     });
+    });
+    jQuery('body').on('ajaxCart.afterCartLoad', function(evt, cart) {
+      $.fancybox.close(true);
+      // Bind to 'ajaxCart.afterCartLoad' to run any javascript after the cart has loaded in the DOM
+      timber.RightDrawer.open();
+    });
+    {% if settings.show_multiple_currencies %}
+      jQuery('body').on('ajaxCart.afterCartLoad', function(evt, cart) {
+        // Convert currency when ajaxcart opens
+        Currency.convertAll(shopCurrency, Currency.currentCurrency);
+      });
+    {% endif %}
+  </script>
+{% endif %}
+<script>
+// thumbnail horizontal gallery for quickview
+ $(".qvimages").owlCarousel({
+   items : 4,
+   lazyLoad : true,
+   navigation : true,
+   navigationText: ["",""],
+   pagination: false
+ });
+
+{% if settings.show_payment_button %}
+  Shopify.PaymentButton.init()
+{% endif %}
+</script>

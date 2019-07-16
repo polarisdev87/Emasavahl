@@ -1,0 +1,7 @@
+{% for i in (1..6) %}
+  <div class="desktop-2 tablet-1 mobile-1 contained onboard-instagram">
+    {% capture current %}{{ forloop.index }}{% endcapture %}
+    {%- assign placeholder = 'product-' | append: current -%}
+    {{ placeholder | placeholder_svg_tag: 'placeholder-svg' }}
+  </div>
+{% endfor %}

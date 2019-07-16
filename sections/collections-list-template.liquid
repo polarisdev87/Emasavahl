@@ -1,0 +1,67 @@
+<div data-section-id="{{ section.id }}">
+
+{% if section.settings.image != blank %}
+  <div class="collection-banner">
+    {% include 'basic-responsive-image' | type: section.settings.image %}
+    <noscript>
+      <img src="{{ section.settings.image | img_url: '1024x' }}" alt="{{ section.settings.image.alt }}">
+    </noscript>
+  </div>
+{% endif %}
+
+  <div id="content" class="row">
+    {% if settings.breadcrumb %}
+      {% include 'breadcrumb' %}
+    {% endif %}
+
+    <div class="section-title desktop-12 mobile-3">
+      <h1>{{ 'collections.general.all_collections' | t }}</h1>
+    </div>
+
+    {% if section.settings.text != blank %}
+    <div id="collection-description" class="desktop-12 tablet-6 mobile-3">
+      <div class="rte">
+        {{ section.settings.text }}
+      </div>
+    </div>
+    {% endif %}
+
+    {% for collection in collections %}
+    <div id="product-loop" class="{{ collection.handle }} collection-listing desktop-12 tablet-6 mobile-3">
+      <div class="section-title">
+        <h2><a href="{{ collection.url }}" title="{{ collection_title }}">{{ collection.title }}</a></h2>
+      </div>
+      <div class="clear"></div>
+      {% for product in collection.products limit: 4 %}
+      <div class="product-collection desktop-3{% cycle ' first', '', '', ' last' %} tablet-half mobile-half" id="prod-{{ product.id }}" data-alpha="{{ product.title }}" data-price="{{ product.price }}">
+        {% include 'product-listing' %}
+      </div>
+      {% endfor %}
+    </div>
+    <div class="clear"></div>
+    {% endfor %}
+
+  </div>
+
+
+</div>
+
+
+{% schema %}
+  {
+    "name": "Collections list",
+    "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Banner image"
+        },
+    {
+        "id": "text",
+        "type": "richtext",
+        "label": "Text",
+        "default": "<p>Add some descriptive text to your all collections page.</p>"
+     }
+	]
+  }
+{% endschema %}

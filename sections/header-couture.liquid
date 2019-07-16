@@ -1,0 +1,73 @@
+{% if page.handle == 'couture' %}
+
+<div class="row">
+  {% for block in section.blocks %}  
+  {% case block.type %}
+  {% when 'text'%}
+  <div class="desktop-3 tablet-2 mobile-full">
+  <img src="{{ block.settings.image | img_url: '270x370' | crop: 'top' }}">
+  <p>{{block.settings.testimonial}}</p>
+  <h6>{{block.settings.customer}}<small>{{block.settings.position}}</small></h6>
+  </div> 
+  {% when 'image'%}
+  <div class="desktop-12 tablet-22 mobile-full">
+  <img src="{{ block.settings.image | img_url: '1800x350' | crop: 'top' }}">
+  </div> 
+  {% endcase %}
+  {% endfor %}
+</div>  
+<hr>
+{% endif %}
+{% schema %}
+{
+  "name": "Couture Sections",
+  "max_blocks": 10,
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Add Testimonial",
+      "limit": 8,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       	  "label": "Testimonial Image"
+        },
+        {
+          "id": "testimonial",
+          "type": "textarea",
+       	  "label": "Testimonial"
+        },
+          {
+            "type": "text",
+            "id": "customer",
+            "label": "Customer"
+          },
+          {
+            "type": "text",
+            "id": "position",
+            "label": "Position"
+          }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Header Image",
+      "limit": 1,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       		"label": "Testimonial Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

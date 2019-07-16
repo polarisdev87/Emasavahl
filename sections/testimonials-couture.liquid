@@ -1,0 +1,150 @@
+{% if page.handle == 'couture' %}
+</div>
+</div>
+<div class="header-banner text-center">
+      <img src="{{ 'header-coutre.jpg' | asset_img_url: '1800x350' | split:'?' | first }}" alt="Places we Love Part 2">
+</div>
+<div id="content" class="row">
+  {% for block in section.blocks %}  
+  {% case block.type %}
+  {% when 'text'%}
+  <div class="desktop-3 tablet-2 mobile-full testimonial">
+  <img src="{{ block.settings.image | img_url: '270x370' | crop: 'top' }}">
+  <p>{{block.settings.testimonial}}</p>
+  <h6>{{block.settings.customer}}<small>{{block.settings.position}}</small></h6>
+  </div> 
+            {% when 'image' %}
+            <div class="flex__item flex flex--center-vertical" {{ block.shopify_attributes }}>
+          	{% if block.settings.align-img == 'left' %}
+              <div class="desktop-6 tablet-6 mobile-full">
+                {% if block.settings.image != blank %}
+                	<img src="{{ block.settings.image | img_url: '800x' }}" alt="{{ block.settings.image.alt }}" class="image-content__image">
+                {% else %}
+                  <div class="image-content__image">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+              <div class="desktop-5 desktop-push-1 tablet-6 mobile-full image-content__text text-{{ block.settings.align }}">
+                <h2>{{ block.settings.title }}</h2>
+                <div class="desktop-9 tablet-9 mobile-full">{{ block.settings.text }}</div>
+              </div>
+            {% elsif block.settings.align-img == 'center' %}
+              <div class="desktop-5 desktop-push-1 tablet-6 mobile-full text-{{ block.settings.align }}">
+                <h2>{{ block.settings.title }}</h2>
+                <div class="desktop-9 tablet-9 mobile-full">{{ block.settings.text }}</div>
+              </div>
+              <div class="desktop-12 tablet-12 mobile-full">
+                {% if block.settings.image != blank %}
+                  <img src="{{ block.settings.image | img_url: '600x' }}" alt="{{ block.settings.image.alt }}" class="image-content__image">
+                {% else %}
+                  <div class="image-content__image">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+            {% elsif block.settings.align-img == 'right' %}
+              <div class="desktop-5 desktop-push-1 tablet-6 mobile-full image-content__text text-{{ block.settings.align }}">
+                <h2>{{ block.settings.title }}</h2>
+                <div class="desktop-9 tablet-9 mobile-full">{{ block.settings.text }}</div>
+              </div>
+              <div class="desktop-6 tablet-6 mobile-full">
+                {% if block.settings.image != blank %}
+                	<img src="{{ block.settings.image | img_url: '800x' }}" alt="{{ block.settings.image.alt }}" class="image-content__image">
+                {% else %}
+                  <div class="image-content__image">
+                    {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+                  </div>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div> 
+  {% endcase %}
+  {% endfor %}
+</div>  
+{% endif %}
+{% schema %}
+{
+  "name": "Couture Sections",
+  "max_blocks": 10,
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Add Testimonial",
+      "limit": 8,
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       	  "label": "Testimonial Image"
+        },
+        {
+          "id": "testimonial",
+          "type": "textarea",
+       	  "label": "Testimonial"
+        },
+          {
+            "type": "text",
+            "id": "customer",
+            "label": "Customer"
+          },
+          {
+            "type": "text",
+            "id": "position",
+            "label": "Position"
+          }
+      ]
+    },
+    {
+        "type": "image",
+        "name": "Image Block",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          },
+          {
+            "type": "radio",
+            "id": "align-img",
+            "label": "Image alignment",
+            "options": [
+              { "value": "left", "label": "Left" },
+              { "value": "right", "label": "Right" }
+            ],
+            "default": "left"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Heading",
+            "default": "Image with text"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Pair large text with an image to give focus to your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>"
+          },
+          {
+            "type": "radio",
+            "id": "align",
+            "label": "Text alignment",
+            "options": [
+              { "value": "left", "label": "Left" },
+              { "value": "center", "label": "Center" },
+              { "value": "right", "label": "Right" }
+            ],
+            "default": "left"
+          }
+        ]
+      }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

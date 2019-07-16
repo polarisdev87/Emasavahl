@@ -1,0 +1,119 @@
+{% if settings.popup %}
+  <script type="text/javascript">
+    if($(window).width() > 500){
+      // Fancybox Join our mailing list popup
+      $(document).ready(function(){
+
+        var check_cookie = $.cookie('mailing_list_delay_popup');
+        if(check_cookie == null){
+          $.cookie('mailing_list_delay_popup', 'expires_seven_days', { expires: 7 });
+          //fire your fancybox here
+          setTimeout(function(){
+            $.fancybox({
+              href: "#subscribe_popup"
+            });
+          }, 3000);
+        }
+      });
+    };
+
+  </script>
+{% endif %}
+
+<div style="display:none">
+  <div id="subscribe_popup" class="row">
+    <div class="left fifty">
+      {% if settings.email_image != blank %}
+        {%- assign image_size = '600x' -%}
+        <p><img src="{{ settings.email_image | img_url: image_size }}"></p>
+      {% endif %}
+    </div>
+
+
+    <div class="right fifty">
+      <h3>{{ 'layout.homepage.mailing_list_join' | t }}</h3>
+      <p>{{ 'layout.homepage.mailing_list_text' | t }}</p>
+      <!-- BEGIN #subs-container -->
+      <div id="subs-container" class="clearfix">
+        <div id="mc_embed_signup">
+          {% form 'customer' %}
+            {{ form.errors | default_errors }}
+            {% if form.posted_successfully? %}
+              <p class="success">{{ 'password.general.thanks' | t }}</p>
+            {% else %}
+              <input type="hidden" name="contact[tags]" value="prospect, password page">
+              <input type="email" name="contact[email]" id="mce-EMAIL" placeholder="{{ 'general.newsletter_form.newsletter_email' | t }}">
+              <input type="submit" id="mc-embedded-subscribe" value="{{ 'general.newsletter_form.submit' | t }}">
+            {% endif %}
+          {% endform %}
+        </div>
+      </div>
+      <div class="clear"></div>
+      <ul id="footer-icons">
+        {% if settings.facebook_url != blank %}
+          <li>
+            <a href="{{ settings.facebook_url }}" target="_blank">
+              <i class="fa fa-facebook fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.instagram-id != blank %}
+          <li>
+            <a href="//instagram.com/{{ settings.instagram-id }}" target="_blank">
+              <i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.twittername != blank %}
+          <li>
+            <a href="{{ settings.twittername }}" target="_blank">
+              <i class="fa fa-twitter fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.pinterest_url != blank %}
+          <li>
+            <a href="{{ settings.pinterest_url }}" target="_blank">
+              <i class="fa fa-pinterest fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.tumblr_url != blank %}
+          <li>
+            <a href="{{ settings.tumblr_url }}" target="_blank">
+              <i class="fa fa-tumblr fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.youtube_url != blank %}
+          <li>
+            <a href="{{ settings.youtube_url }}" target="_blank">
+              <i class="fa fa-youtube fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.googleplus_url != blank %}
+          <li>
+            <a href="{{ settings.googleplus_url }}" target="_blank">
+              <i class="fa fa-google-plus-official fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.snapchat-id != blank %}
+          <li>
+            <a href="//snapchat.com/add/{{ settings.snapchat-id }}" target="_blank">
+              <i class="fa fa-snapchat-ghost fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if settings.weibo-id != blank %}
+          <li>
+            <a href="//weibo.com/{{ settings.weibo-id }}" target="_blank">
+              <i class="fa fa-weibo fa-2x" aria-hidden="true"></i>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</div>

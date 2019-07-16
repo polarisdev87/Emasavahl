@@ -1,0 +1,90 @@
+{% comment %}
+    This template was created by Social Comerce Ninja.
+    This template will hide all hidden offer product variant in your theme
+{% endcomment %}
+{% assign scn_options = '' %}
+{% assign scn_options_count = 0 %}
+
+{% for variant in product.variants %}
+    {% if variant.metafields.brodev_scn.hide == "true" %}
+        {% assign scn_options_count = scn_options_count|plus:1 %}
+    {% endif %}
+{% endfor %}
+
+{% if scn_options_count > 0 %}
+    <script type="text/javascript">
+        var brodevSCNDomLoaded = function (callback) {
+             
+            
+
+             
+            if (document.addEventListener) {
+                document.addEventListener('DOMContentLoaded', callback, false);
+            }
+             
+            else if (/KHTML|WebKit|iCab/i.test(navigator.userAgent)) {
+                var DOMLoadTimer = setInterval(function () {
+                    if (/loaded|complete/i.test(document.readyState)) {
+                        callback();
+                        clearInterval(DOMLoadTimer);
+                    }
+                }, 10);
+            } else {
+                 
+                window.onload = callback;
+            }
+        };
+
+        function removeCloneVariant() {
+            setTimeout(function() {
+                
+                {% for variant in product.variants %}
+                {% if variant.metafields.brodev_scn.hide == "true" %}
+                    
+                    jQuery('select option').filter(function() {
+                        var text = jQuery(this).text();
+                        return text.indexOf("{{" variant.option1 | json "}}") !== -1;
+                    }).remove();
+                    
+                    jQuery('.dropdown *,ul li,label,div').filter(function() {
+                        var html = jQuery(this).html(),
+                        value = jQuery(this).data('value');
+                        return (html  && (html == "{{" variant.option1 | json "}}"))
+                            || (value && (value.indexOf("{{" variant.option1 | json "}}") !== -1));
+                    }).remove();
+                {% endif %}
+            {% endfor %}
+
+                var defaultTitleText = 'Default Title';
+                
+                jQuery('select option').filter(function() {
+                    return jQuery(this).text() == defaultTitleText;
+                }).hide();
+                
+                jQuery('.dropdown *,ul li,label,div').filter(function() {
+                    return (jQuery(this).data('value') == defaultTitleText);
+                }).hide();
+
+                
+                jQuery.each(jQuery('.single-option-selector'), function(index, selection) {
+                    var option = jQuery(selection).find('option');
+                    if (option.length <= 1) {
+                        if (option.first().length && option.first().text().indexOf(defaultTitleText) != -1) {
+                            jQuery(selection).hide();
+                        }
+                    }
+                });
+
+                
+                $('.single-option-selector').trigger('change');
+            }, 100);
+        }
+
+        brodevSCNDomLoaded(function() {
+            
+            removeCloneVariant();
+            
+            
+        });
+    </script>
+{% endif %}

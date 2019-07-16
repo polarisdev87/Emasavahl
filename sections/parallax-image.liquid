@@ -1,0 +1,254 @@
+{% assign img_url = section.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' %}
+
+<section
+  class="parallax-{{ section.id }} index-section parallax parallax-window no-fouc lazyload"
+  data-section-type="parallax-section"
+  data-bgset="{% include 'bgset', image: section.settings.image %}"
+  data-sizes="auto"
+  data-section-id="{{ section.id }}" >
+
+  <article class="row">
+    <div class="parallax-content desktop-12 tablet-6 mobile-3">
+
+      <div class="parallax-text">
+        {% unless section.settings.heading == blank %}
+          <h2>{{ section.settings.heading | escape }}</h2>
+        {% endunless %}
+        {%- unless section.settings.subheading == blank -%}
+          <p>{{ section.settings.subheading }}</p>
+        {%- endunless -%}
+        {% unless section.settings.button_link == blank %}
+          <div class="clear"></div>
+          <a class="button" href="{{ section.settings.button_link }}">
+            {{ section.settings.button_text }}
+          </a>
+        {% endunless %}
+      </div>
+
+      {% if section.settings.image == blank %}
+        <div class="onboard plax-placehold">
+          {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {% endif %}
+    </div>
+  </article>
+
+</section>
+
+<div class="clear"></div>
+
+
+
+<style>
+  .parallax-{{ section.id }} article {
+    display: table;
+    height: {{ section.settings.page_height }}px;
+    min-height: {{ section.settings.page_height }}px;
+  }
+  .parallax-{{ section.id }} .parallax-text h2 {
+    font-size: {{ section.settings.heading_font_size }}px;
+    font-weight: {{ section.settings.heading_font_weight }};
+    display: inline-block;
+  }
+  @media screen and (max-width: 500px) {
+    .parallax-{{ section.id }} .parallax-text h2 {
+      font-size: 16px;
+    }
+  }
+  section.parallax-{{ section.id }} .parallax-text h2, section.parallax-{{ section.id }} .parallax-text a h2, section.parallax-{{ section.id }} .parallax-text a:visited h2 {
+    color: {{ section.settings.heading_color }};
+  }
+  section.parallax-{{ section.id }} .parallax-text a:hover h2 {
+    opacity: 0.8;
+  }
+  .parallax-{{ section.id }} .parallax-text p {
+    font-size: {{ section.settings.subheading_font_size }}px;
+    font-weight: {{ section.settings.subheading_font_weight }};
+    color: {{ section.settings.subheading_color }};
+    max-width: 60%;
+    margin: auto;
+  }
+  @media screen and (max-width: 500px) {
+    .parallax-{{ section.id }} .parallax-text p {
+      font-size: 14px;
+    }
+  }
+  .parallax-{{ section.id }} .parallax-text a.button, .parallax-{{ section.id }} .parallax-text a.button:visited {
+    background: {{ section.settings.button_color }};
+    color: {{ section.settings.button_text_color }};
+  }
+  .parallax-text a.button:hover {
+    opacity: 0.8;
+  }
+  .no-js .parallax-{{ section.id }} {
+    background-image: url('{{ section.settings.image | img_url: '1024x' }}');
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center center !important;
+  }
+  @media screen and ( min-width: 1220px ) {
+    section.parallax-{{ section.id }} {
+      background-size: 100% !important;
+    }
+  }
+  @media screen and ( max-width: 1024px ) {
+    .parallax-{{ section.id }} {
+      background-attachment: scroll !important;
+      background-size: cover !important;
+    }
+  }
+  @media screen and ( max-width: 740px ) {
+    section.parallax-{{ section.id }} article {
+      height: initial;
+      min-height: 200px;
+    }
+  }
+
+</style>
+
+
+{% schema %}
+  {
+    "name": "Image with text overlay",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "range",
+        "id": "page_height",
+        "min": 200,
+        "max": 1000,
+        "step": 100,
+        "label": "Image height",
+        "default": 400
+      },
+      {
+        "type": "header",
+        "content": "Overlay Heading"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Image with text overlay"
+      },
+      {
+        "type": "range",
+        "id": "heading_font_size",
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px",
+        "label": "Heading size",
+        "default": 26
+      },
+      {
+        "type": "select",
+        "id": "heading_font_weight",
+        "label": "Heading weight",
+        "options": [
+          {
+            "value": "400",
+            "label": "Normal"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "heading_color",
+        "label": "Heading",
+        "default": "#000"
+      },
+      {
+        "type": "header",
+        "content": "Overlay Text"
+      },
+      {
+        "type": "textarea",
+        "id": "subheading",
+        "label": "Text",
+        "default": "Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story."
+      },
+      {
+        "type": "range",
+        "id": "subheading_font_size",
+        "min": 12,
+        "max": 36,
+        "step": 1,
+        "unit": "px",
+        "label": "Text size",
+        "default": 16
+      },
+      {
+        "type": "select",
+        "id": "subheading_font_weight",
+        "label": "Text weight",
+        "options": [
+          {
+            "value": "400",
+            "label": "Normal"
+          },
+          {
+            "value": "300",
+            "label": "Light"
+          },
+          {
+            "value": "700",
+            "label": "Bold"
+          }
+        ]
+      },
+      {
+        "type": "color",
+        "id": "subheading_color",
+        "label": "Text color",
+        "default": "#000"
+      },
+      {
+        "type": "header",
+        "content": "Overlay Button"
+      },
+      {
+       "id": "button_text",
+       "type": "text",
+       "label": "Button text",
+  	   "default": "Add a button",
+  	   "info": "Visible only if a link is chosen"
+      },
+      {
+        "type": "url",
+        "id": "button_link",
+        "label": "Button link"
+      },
+      {
+        "type": "color",
+        "id": "button_text_color",
+        "label": "Button text",
+        "default": "#fff"
+      },
+      {
+        "type": "color",
+        "id": "button_color",
+        "label": "Button background",
+        "default": "#000"
+      }
+	],
+  "presets": [
+      {
+        "name": "Image with text overlay",
+        "category": "Image"
+      }
+    ]
+}
+{% endschema %}

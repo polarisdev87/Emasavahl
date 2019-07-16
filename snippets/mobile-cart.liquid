@@ -1,0 +1,39 @@
+<!-- Shown on Mobile Only -->
+<ul id="cart" class="mobile-3 tablet-6 mobile-only">
+  <li>
+    <span class="shifter-handle">
+      <i class="fa fa-bars" aria-hidden="true"></i>
+    </span>
+  </li>
+  <li class="seeks">
+    <a id="inline" href="#search_popup" class="open_popup">
+      <i class="fa fa-search" aria-hidden="true"></i>
+    </a>
+    {% if settings.show_multiple_currencies %}
+      {% include 'currencies-switcher' %}
+    {% endif %}
+  </li>
+  {% if shop.customer_accounts_enabled %}
+    <li class="cust">
+      {% if customer  %}
+        <a href="/account">
+          <i class="fa fa-user-o" aria-hidden="true"></i>
+        </a>
+        <a href="/account/logout" class="logout-link">
+          <i class="fa fa-user-times" aria-hidden="true"></i>
+        </a>
+      {% else %}
+        <a href="/account/login">
+          <i class="fa fa-user-o" aria-hidden="true"></i>
+        </a>
+      {% endif %}
+    </li>
+  {% endif %}
+  <li>
+    <a href="/cart" class="site-header__cart-toggle js-drawer-open-right" aria-controls="CartDrawer" aria-expanded="false">
+      <span class="cart-words">{{ 'cart.general.title' | t }}</span>
+      &nbsp;{% if section.settings.cart_icon == 'cart' %}<i class="fa fa-shopping-cart" aria-hidden="true"></i>{% elsif section.settings.cart_icon == 'bag' %}<i class="fa fa-shopping-bag" aria-hidden="true"></i>{% endif %}
+      <span class="CartCount">{{ cart.item_count }}</span>
+    </a>
+  </li>
+</ul>

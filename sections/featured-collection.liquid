@@ -1,0 +1,139 @@
+<section class="homepage-featured-collection-{{ section.id }} homepage-products index-section no-fouc" data-section-id="{{ section.id }}">
+{%- assign collection = collections[section.settings.collection] -%}
+{%- assign prod_limit = section.settings.limit -%}
+
+  {% if section.settings.heading != blank %}
+  <div class="section-title row">
+    <h2>
+      <a href="{{ collection.url }}">
+        {{ section.settings.heading | escape }}
+      </a>
+    </h2>
+  </div>
+  {% endif %}
+
+  <div class="row">
+
+    {% if section.settings.homepage_product_layout == 'grid' %}
+
+      {% case section.settings.grid %}
+        {% when 2 %}
+          {%- assign grid_item_width = 'desktop-6 tablet-3 mobile-half' -%}
+        {% when 3 %}
+          {%- assign grid_item_width = 'desktop-4 tablet-2 mobile-half' -%}
+        {% when 4 %}
+          {%- assign grid_item_width = 'desktop-3 tablet-2 mobile-half' -%}
+      {% endcase %}
+
+      <article class="product-loop">
+        {% for product in collection.products limit: prod_limit  %}
+          <div class="product {{ grid_item_width }} mobile-half" id="prod-{{ product.id }}" data-alpha="{{ product.title }}" data-price="{{ product.price }}">
+            {% include 'product-listing' %}
+          </div>
+        {% endfor %}
+      </article>
+
+    {% elsif section.settings.homepage_product_layout == 'carousel' %}
+
+      <div class="collection-carousel">
+        {% for product in collection.products limit: prod_limit  %}
+        <div class="lazyOwl product" data-alpha="{{ product.title }}" data-price="{{ product.price }}">
+          {% include 'product-listing' %}
+        </div>
+        {% endfor %}
+      </div>
+
+    {% endif %}
+
+    {% if section.settings.collection == blank %}
+      {% include 'onboard-product' %}
+    {% endif %}
+
+  </div>
+</section>
+<div class="clear"></div>
+
+<style>
+  section.homepage-featured-collection-{{ section.id }} {
+    background: {{ section.settings.background_color }};
+  }
+  section.homepage-featured-collection-{{ section.id }} .section-title h2 {
+    border-color: {{ section.settings.heading_color }} !important;
+  }
+  section.homepage-featured-collection-{{ section.id }} .section-title h2,
+  section.homepage-featured-collection-{{ section.id }} .section-title h2 a,
+  section.homepage-featured-collection-{{ section.id }} .fr a {
+    color: {{ section.settings.heading_color }} !important;
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Featured collection",
+    "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured collection"
+    },
+    {
+       "type": "color",
+       "id": "heading_color",
+       "label": "Heading color",
+       "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fff"
+    },
+    {
+      "id": "collection",
+      "type": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "homepage_product_layout",
+      "label": "Products layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 2,
+      "max": 30,
+      "step": 1,
+      "label": "Products shown",
+      "default": 6
+    },
+    {
+      "type": "range",
+      "id": "grid",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Products per row",
+	    "info": "Grid usage only",
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured collection",
+      "category": "Collection"
+    }
+  ]
+}
+{% endschema %}

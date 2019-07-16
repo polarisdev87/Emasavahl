@@ -1,0 +1,42 @@
+<div class="section-home-sies grid-uniform">
+  {% for block in section.blocks %}
+          {% include 'sies-grid-item-simple' %}
+  {% endfor %}
+  </div>
+{% schema %}
+{
+  "name": "Sighted in Ema Simple",
+  "max_blocks": 250,
+  "settings": [
+    {
+      "id": "text-box",
+      "type": "text",
+      "label": "Heading",
+      "default": "Sighted in Emma Savahl"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Add New Sighted",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+       		"label": "Image Banner"
+        },
+        {
+          "id": "link",
+          "type": "url",
+       		"label": "Button link"
+        },
+          {
+            "type": "text",
+            "id": "social_handle",
+            "label": "Social Profile"
+          }
+      ]
+    }
+  ]
+}
+{% endschema %}

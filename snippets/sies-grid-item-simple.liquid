@@ -1,0 +1,7 @@
+{% assign column_width = 'desktop-4 tablet-3 mobile-full text-center related-cart' %}
+<div class="{{ column_width }}">
+    <div class="overlay-image-simple">
+    <a href="{{block.settings.link}}"><img src="{{ block.settings.image | img_url: '450x' | crop: 'top' }}"/></a>
+    <p class="supports-fontface icon icon-instagram">{{block.settings.social_handle}}<a href="{{block.settings.link}}" class="btn btn-ema sie-btn-simple">Shop the look</a></p>
+    </div>
+</div> 

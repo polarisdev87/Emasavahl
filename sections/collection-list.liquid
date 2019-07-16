@@ -1,0 +1,168 @@
+<section class="homepage-collection-list-{{ section.id }} index-section collection-loop homepage-section no-fouc" data-section-id="{{ section.id }}">
+
+  {% comment %}When showing each collection as it's own carousel{% endcomment %}
+  {% if section.settings.collection_layout == 'carousel' %}
+    {% for block in section.blocks %}
+      {%- assign collection = collections[block.settings.collection] -%}
+      <div class="section-title row">
+        {% if block.settings.collection == blank %}
+          <h2>
+            <a href="#">Collection {{ forloop.index }}</a>
+          </h2>
+        {% else %}
+          <h2>
+            <a href="{{ collection.url }}" title="{{ collection_title }}">{{ collection.title }}</a>
+          </h2>
+        {% endif %}
+      </div>
+      <article class="row collection-loop">
+        {% include 'homepage-collections-loop' %}
+      </article>
+    {% endfor %}
+
+  {% comment %}When showing each collection as a grid item{% endcomment %}
+  {% elsif section.settings.collection_layout == 'grid' %}
+    {% if section.settings.heading != blank %}
+      <div class="section-title row">
+        <h2>
+          <a href="/collections">{{ section.settings.heading | escape }}</a>
+        </h2>
+      </div>
+    {% endif %}
+
+    <div class="clear"></div>
+
+    {% case section.settings.grid %}
+    {% when 2 %}
+      {%- assign grid_item_width = 'desktop-6 tablet-3 mobile-half' -%}
+    {% when 3 %}
+      {%- assign grid_item_width = 'desktop-4 tablet-2 mobile-half' -%}
+    {% when 4 %}
+      {%- assign grid_item_width = 'desktop-3 tablet-2 mobile-half' -%}
+    {% endcase %}
+
+    <article class="row collection-loop">
+      {% for block in section.blocks limit: section.blocks.size %}
+        {%- assign collection = collections[block.settings.collection] -%}
+        <div class="{{ grid_item_width }}" data-alpha="{{ collection.title }}" {{ block.shopify_attributes }}>
+          {% if block.settings.collection == blank %}
+            {% capture current %}{{ forloop.index }}{% endcapture %}
+      	    {%- assign placeholder = 'collection-' | append: current -%}
+            <div class="collection-image ci onboard">
+              <a href="#">
+                {{ placeholder | placeholder_svg_tag }}
+              </a>
+            </div>
+            <div class="product-details">
+              <h3><a href="#">Sample collection {{ forloop.index }}</a></h3>
+            </div>
+          {% else %}
+            {% include 'collection-grid-item' %}
+          {% endif %}
+        </div>
+      {% endfor %}
+    </article>
+  {% endif %}
+
+  {% if section.blocks.size == 0 %}
+    {% include 'onboard-collection' %}
+  {% endif %}
+
+</section>
+<div class="clear"></div>
+
+<style>
+  section.homepage-collection-list-{{ section.id }} {
+    background: {{ section.settings.background_color }};
+  }
+  section.homepage-collection-list-{{ section.id }} h2,
+  section.homepage-collection-list-{{ section.id }} h2 a {
+    color: {{ section.settings.heading_color }} !important;
+    border-color: {{ section.settings.heading_color }} !important;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection list",
+  "max_blocks": 12,
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collection list"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#fff"
+    },
+    {
+      "type": "select",
+      "id": "collection_layout",
+      "label": "Collections layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "carousel",
+          "label": "Carousel"
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "grid",
+      "min": 2,
+      "max": 4,
+      "step": 1,
+      "label": "Collections per row",
+	     "info": "Grid usage only",
+      "default": 3
+    }
+  ],
+  "blocks": [
+    {
+      "type": "featured_collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "label": "Collection",
+          "id": "collection",
+          "type": "collection"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection list",
+      "category": "Collection",
+      "settings": {
+        "grid": 3
+      },
+      "blocks": [
+        {
+          "type": "featured_collection"
+        },
+        {
+          "type": "featured_collection"
+        },
+	      {
+          "type": "featured_collection"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

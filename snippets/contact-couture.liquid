@@ -1,0 +1,118 @@
+{% form 'contact' %}
+  <div id="contactFormWrapper">
+    {% if form.errors %}
+      <div class="notice error">
+        <p>{{ 'general.forms.post_error' | t }}</p>
+        <ul class="disc">
+          {% for field in form.errors %}
+            {% if field == 'form' %}
+              <li>
+                {{ form.errors.messages[field] }}
+              </li>
+            {% else %}
+              <li>
+                <strong>{{ field | replace: 'body', 'Message' }}</strong> {{ form.errors.messages[field] }}
+              </li>
+            {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+
+    {% if form.posted_successfully? %}
+      <div class="successForm feedback">
+        <p>{{ 'contact.form.post_success' | t }}</p>
+      </div>
+    {% endif %}
+
+
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+        <input type="text" id="contactFormName" name="contact[name]" placeholder="{{ 'contact.form.name' | t }}" />
+      </p>
+    </div>
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+        <input type="email" id="contactFormEmail" name="contact[email]" placeholder="{{ 'contact.form.email' | t }}" />
+      </p>
+    </div>
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+        <input type="text" id="contactFormTelephone" name="contact[phone]" placeholder="{{ 'contact.form.phone' | t }}" />
+      </p>
+    </div>
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+      <select name="contact[bust]" id="contactFormBust">
+      <option value="">Bust</option>
+      <option value="xs">Extra Small (32-34)</option>
+      <option value="xs">Small (34-36)</option>
+      <option value="xs">Medium (36-38)</option>
+      <option value="xs">Large (38-40)</option>
+      </select>
+      </p>
+    </div>
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+      <select name="contact[waist]" id="contactFormBust">
+      <option value="">Waist</option>
+      <option value="xs">Extra Small (23-25)</option>
+      <option value="xs">Small (25-27)</option>
+      <option value="xs">Medium (27-29)</option>
+      <option value="xs">Large (29-31)</option>
+      </select>
+      </p>
+    </div>
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+      <select name="contact[hip]" id="contactFormBust">
+      <option value="">Hip</option>
+      <option value="xs">Extra Small (33-35)</option>
+      <option value="xs">Small (35-37)</option>
+      <option value="xs">Medium (37-39)</option>
+      <option value="xs">Large (39-41)</option>
+      </select>
+      </p>
+    </div>
+    {%comment%}
+    <div class="desktop-12 tablet-6 mobile-3">
+      <p>
+      <select name="contact[artwork]" id="contactFormBust">
+      <option value="">Artwork</option>
+      <option value="Arabesque">Arabesque</option>
+      <option value="Bloom combo">Bloom combo</option>
+      <option value="Fusion">Fusion</option>
+      <option value="Zaha">Zaha</option>
+      <option value="Small tribal">Small tribal</option>
+      <option value="Botanica combo">Botanica combo</option>
+      <option value="Fishscale17">Fishscale17</option>
+      <option value="Elven17">Elven17</option>
+      <option value="Crocodile">Crocodile</option>
+      <option value="Mysteique">Mysteique</option>
+      <option value="English garden">English garden</option>
+      </select>
+      </p>
+    </div>
+    {%endcomment%}
+    <div class="desktop-12 mobile-3">
+      <p>
+        <textarea rows="15" cols="90" id="contactFormMessage" name="contact[body]" placeholder="Event (What type of event is the dress for? Please give a brief description below)"></textarea>
+      </p>
+      <p>
+        <input type="submit" id="contactFormSubmit" class="secondary button" value="{{ 'contact.form.send' | t }}" />
+      </p>
+    </div>
+  </div>
+
+  <div class="clear"></div>
+
+  {% if form.posted_successfully? %}
+    <div class="successForm feedback">
+      <p>{{ 'contact.form.post_success' | t }}</p>
+    </div>
+  {% endif %}
+
+{% endform %}
+
+<div class="clear"></div>
